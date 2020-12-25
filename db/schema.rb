@@ -16,6 +16,7 @@ ActiveRecord::Schema.define(version: 20201225164927) do
   create_table "authors", force: :cascade do |t|
     t.string "name"
     t.string "image"
+    t.string "gender"
     t.string "description"
   end
 
