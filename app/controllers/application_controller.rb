@@ -11,4 +11,8 @@ class ApplicationController < Sinatra::Base
     erb :welcome
   end
 
+  get '/example' do
+    erb :example
+  end
+
 end
