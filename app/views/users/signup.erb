@@ -1,0 +1,17 @@
+<% if @errors && !@errors.empty?%>
+    <div id="flash">
+        <% @errors.each_with_index do |error, i| %>
+            <div class="flash message-#{i+1}"><%= error %></div>
+        <% end %>
+        <div id="close">X</div>
+    </div>
+<% end %>
+<form action="/signup" method="post">
+    <label for="username">Username:</label><br>
+    <input type="text" name="username" id="username" maxlength="30"><br>
+    <label for="password">Password:<label><br>
+    <input type="text" name="password" id="password" maxlength="30">
+    <input type="submit" name="submit">
+</form>
+
+<link rel="stylesheet" href="/stylesheets/flash.css" />

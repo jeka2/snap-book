@@ -1,0 +1,15 @@
+#flash {
+    position: relative;
+    width: 70%;
+    margin: auto;
+}
+.flash {
+    background-color: aquamarine;
+    border-radius: 25px;
+    padding: 5px 10px;
+}
+
+.close {
+    top: 0px;
+    float: right;
+}
