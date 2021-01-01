@@ -11,12 +11,10 @@ class ApplicationController < Sinatra::Base
                            :path => '/',
                            :secret => 'your_secret'
 
+                           
+
   get "/" do
     erb :welcome
-  end
-
-  get '/login' do
-    erb :login
   end
 
 end

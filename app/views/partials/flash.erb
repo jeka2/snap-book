@@ -1,0 +1,10 @@
+<% if @flash && !@flash.empty?%>
+    <div id="flash">
+        <% @flash.flatten.each_with_index do |mssg, i| %>
+            <div class="flash message-#{i+1}"><%= mssg %></div>
+        <% end %>
+        <div id="close">X</div>
+    </div>
+<% end %>
+
+<link rel="stylesheet" href="/stylesheets/flash.css" />
