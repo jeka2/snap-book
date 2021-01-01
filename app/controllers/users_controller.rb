@@ -18,6 +18,7 @@ class UsersController < ApplicationController
         @user = User.find_by(username: params[:username])
         if @user && @user.password == params[:password]
             give_token
+            redirect to '/'
         else
             add_error(error_list[:bad_credentials])
             set_flash
@@ -49,9 +50,10 @@ class UsersController < ApplicationController
         proper_password?(password, params[:password_auth])
         
         if @flash.empty? 
-            @user = User.new(username: username)
-            @user.set_password(password)
-            @user.save
+            @user = User.new(username: params[:username])
+            @user.password = params[:password]
+            @user.save!
+
             give_token
             redirect to '/'
         else

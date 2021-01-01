@@ -2,9 +2,12 @@ class User < ActiveRecord::Base
     has_many :books
     has_many :authors, through: :books
 
-    def set_password(password)
-        binding.pry
-        @password = BCrypt::Password.create(password)
-        self.password = @password
+    def password
+        @password ||= BCrypt::Password.new(password_hash)
+    end
+
+    def password=(new_password)
+        @password = BCrypt::Password.create(new_password)
+        self.password_hash = @password
     end
 end
