@@ -1,11 +1,12 @@
-<% if @errors && !@errors.empty?%>
+<% unless @errors.empty?%>
     <div id="flash">
-        <% @errors.each_with_index do |error, i| %>
+        <% @errors.flatten.each_with_index do |error, i| %>
             <div class="flash message-#{i+1}"><%= error %></div>
         <% end %>
         <div id="close">X</div>
     </div>
 <% end %>
+
 <form action="/signup" method="post">
     <label for="username">Username:</label><br>
     <input type="text" name="username" id="username" maxlength="30"><br>
