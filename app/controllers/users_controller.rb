@@ -5,6 +5,7 @@ class UsersController < ApplicationController
 
     get '/login' do 
         redirect to '/' if is_logged_in?(session)
+
         clear_errors
         display_flash
 
@@ -14,7 +15,7 @@ class UsersController < ApplicationController
     post '/login' do 
         clear_errors
 
-        @user = User.find_by(name: params[:username])
+        @user = User.find_by(username: params[:username])
         if @user && @user.password == params[:password]
             give_token
         else
@@ -48,7 +49,7 @@ class UsersController < ApplicationController
         proper_password?(password, params[:password_auth])
         
         if @flash.empty? 
-            @user = User.new(name: username)
+            @user = User.new(username: username)
             @user.set_password(password)
             @user.save
             give_token
@@ -90,7 +91,7 @@ private
 
     def proper_username?(username)
         username = username.strip # Strips leading a trailing whitespace
-        user = User.find_by(name: username)
+        user = User.find_by(username: username)
         
         if user then add_error(error_list[:user_exists]) end
         if username.length < 6 || username.match(/\s/) then add_error(error_list[:wrong_username]) end

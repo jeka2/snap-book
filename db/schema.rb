@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210101205209) do
+ActiveRecord::Schema.define(version: 20201225164927) do
 
   create_table "authors", force: :cascade do |t|
     t.string "name"
@@ -30,10 +30,12 @@ ActiveRecord::Schema.define(version: 20210101205209) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string  "name"
-    t.string  "password"
-    t.string  "info",     default: "User has not provided any information about themselves"
+    t.string  "username"
+    t.string  "first_name"
+    t.string  "last_name"
+    t.string  "info"
     t.integer "age"
+    t.string  "password"
   end
 
 end
