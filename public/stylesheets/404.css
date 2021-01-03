@@ -1,0 +1,10 @@
+.wrapper-404 {
+    display: block;
+    padding: 30%;
+    margin: auto;
+    width: 50%;
+}
+
+p.message-404 {
+    font-size: 20px;
+}

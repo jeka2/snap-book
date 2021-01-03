@@ -7,4 +7,3 @@ class CreateAuthors < ActiveRecord::Migration
       t.string :description
     end
   end
-end

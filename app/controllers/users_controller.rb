@@ -4,7 +4,7 @@ class UsersController < ApplicationController
     include Helpers
 
     get '/login' do 
-        redirect to '/' if is_logged_in?(session)
+        redirect to '/' if Helpers.is_logged_in?(session)
 
         clear_errors
         display_flash
@@ -32,7 +32,7 @@ class UsersController < ApplicationController
     end
 
     get '/signup' do 
-        redirect to '/' if is_logged_in?(session)
+        redirect to '/' if Helpers.is_logged_in?(session)
 
         clear_errors
         display_flash
@@ -46,12 +46,12 @@ class UsersController < ApplicationController
         username = params[:username]
         password = params[:password]
         
-        proper_username?(username)
-        proper_password?(password, params[:password_auth])
+        authenticate_username(username)
+        authenticate_password(password, params[:password_auth])
         
         if @flash.empty? 
-            @user = User.new(username: params[:username])
-            @user.password = params[:password]
+            @user = User.new(username: username)
+            @user.password = password
             @user.save!
 
             give_token
@@ -62,9 +62,21 @@ class UsersController < ApplicationController
         end
     end
 
+    get '/users/me' do 
+        redirect to '/login' unless Helpers.is_logged_in?(session)
+
+        user = User.find(session[:user_id])
+        redirect to "/users/#{user.username}"
+    end
+
     get '/users/:username' do 
         @user = User.find_by(username: params[:username])
-        erb :'users/profile'
+
+        if @user
+            erb :'users/profile'
+        else
+            erb :'users/404'
+        end
     end
 
 private
@@ -91,7 +103,7 @@ private
         end
     end
 
-    def proper_username?(username)
+    def authenticate_username(username)
         username = username.strip # Strips leading a trailing whitespace
         user = User.find_by(username: username)
         
@@ -99,8 +111,8 @@ private
         if username.length < 6 || username.match(/\s/) then add_error(error_list[:wrong_username]) end
     end
 
-    def proper_password?(password, password_auth)
-        add_error(error_list[:no_match]) if password != password_auth
+    def authenticate_password(password, password_auth)
+        add_error(error_list[:no_match]) unless password == password_auth
         add_error(error_list[:wrong_number_count]) unless password.match(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)
     end
 
