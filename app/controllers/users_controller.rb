@@ -16,6 +16,7 @@ class UsersController < ApplicationController
         clear_errors
 
         @user = User.find_by(username: params[:username])
+
         if @user && @user.password == params[:password]
             give_token
             redirect to '/'
@@ -71,8 +72,12 @@ class UsersController < ApplicationController
 
     get '/users/:username' do 
         @user = User.find_by(username: params[:username])
-
         if @user
+            # Compacts all relevant user info for display
+            info_hash = @user.attributes.except('id', 'username', 'password_hash').compact
+
+            @user_info = transform_for_display(info_hash)
+
             erb :'users/profile'
         else
             erb :'users/404'
@@ -95,6 +100,20 @@ private
 
     def set_flash
         session[:flash] = @flash
+    end
+
+    def transform_for_display(hash)
+        return_hash = {}
+        hash.each do |k, v| 
+            transformed_key = nil 
+            if k.match(/_/)
+                transformed_key = k.split(/_/).map(&:capitalize).join(' ')
+            else
+                transformed_key = k.capitalize
+            end
+            return_hash["#{transformed_key}"] = v
+        end
+        return_hash
     end
 
     def display_flash
