@@ -1,0 +1,23 @@
+<div class="edit-wrapper">
+    <h3 class="edit-header">Edit Your Info:</h3>
+    <form method="post" action="/users/<%= @user.username %>/edit">
+        <input id="hidden" type="hidden" name="_method" value="patch">
+        <% @user_info.each do |k, v| %>
+            <% if k == 'age' %>
+                <label for='<%= k %>'><%= User.displayable_version(k) %>:</label><br>
+                <input type="number" value="<%= v %>" id="<%= k %>" name=<%= k %>><br>
+            <% elsif k == 'info'%>
+                <label for='<%= k %>'><%= User.displayable_version(k) %>:</label><br>
+                <textarea id="<%= k %>" name=<%= k %> placeholder= "Describe yourself" rows="5" cols="50">
+                    <%= v %>
+                </textarea><br>
+            <% else %>
+                <label for='<%= k %>'><%= User.displayable_version(k) %>:</label><br>
+                <input type="text" value="<%= v %>" id="<%= k %>" name=<%= k %>><br>
+            <% end %>
+        <% end %>
+        <input type="submit" value="Edit Info">
+    </form>
+</div>
+
+<link rel="stylesheet" href="/stylesheets/user/edit.css" />

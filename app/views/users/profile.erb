@@ -1,15 +1,19 @@
 <h1><%= "#{@user.username}'s Profile" %></h1><hr><br>
 <div class="user-info-wrapper">
-    <% if @user.info %>
+    <% if !@user_info.empty? %>
         <h3>About me:</h3><br>
         <% @user_info.each do |k, v| %>
-            <h4 class="user-info-type"><%= "#{k}: " %></h4><br>
+            <h4 class="user-info-type"><%= "#{User.displayable_version(k)}: " %></h4><br>
             <p class="user-info"><%= "#{v}" %></p><br>
         <% end %>
     <% else %>
         <p>The user has not provided any information about themselves.</p>
     <% end %>
+    <img class="user-image" src="/images/default-avatar.jpg">
+    <% if @user.id == Helpers.current_user(session) %>
+        <small class="edit-button"><a href="/users/<%= @user.username %>/edit">Edit My Profile</a></small>
+    <% end %>
 </div>
 
-<link rel="stylesheet" href="/stylesheets/profile.css" />
+<link rel="stylesheet" href="/stylesheets/user/profile.css" />
 

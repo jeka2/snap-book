@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20201225164927) do
+ActiveRecord::Schema.define(version: 20210103172904) do
 
   create_table "authors", force: :cascade do |t|
     t.string "name"
@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 20201225164927) do
     t.string  "info"
     t.integer "age"
     t.string  "password_hash"
+    t.string  "image"
   end
 
 end

@@ -74,14 +74,42 @@ class UsersController < ApplicationController
         @user = User.find_by(username: params[:username])
         if @user
             # Compacts all relevant user info for display
-            info_hash = @user.attributes.except('id', 'username', 'password_hash').compact
-
-            @user_info = transform_for_display(info_hash)
+            @user_info = @user.attributes.except('id', 'username', 'password_hash', 'image').compact
 
             erb :'users/profile'
         else
+            status 404
             erb :'users/404'
         end
+    end
+
+    get '/users/:username/edit' do 
+        @user = User.find_by(username: params[:username])
+        
+        unless @user.id == Helpers.current_user(session)
+            status 403
+            "Permission Denied"
+        else
+            @user_info = @user.attributes.except('id', 'username', 'password_hash', 'image')
+
+            erb :'users/edit'
+        end
+    end
+
+    patch '/users/:username/edit' do 
+        @user = User.find_by(username: params[:username])
+        params.each do |k, v|
+            if @user.respond_to?(k)
+                if @user.column_for_attribute(k).type == :integer
+                    @user[k] = v.to_i
+                elsif @user.column_for_attribute(k).type == :string
+                    @user[k] = v.strip
+                end
+            end
+        end
+        @user.save!
+
+        redirect to "/users/#{params[:username]}"
     end
 
 private
@@ -100,20 +128,6 @@ private
 
     def set_flash
         session[:flash] = @flash
-    end
-
-    def transform_for_display(hash)
-        return_hash = {}
-        hash.each do |k, v| 
-            transformed_key = nil 
-            if k.match(/_/)
-                transformed_key = k.split(/_/).map(&:capitalize).join(' ')
-            else
-                transformed_key = k.capitalize
-            end
-            return_hash["#{transformed_key}"] = v
-        end
-        return_hash
     end
 
     def display_flash
