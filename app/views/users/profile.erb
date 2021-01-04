@@ -11,7 +11,7 @@
     <% end %>
     <img class="user-image" src="/images/default-avatar.jpg">
     <% if @user.id == Helpers.current_user(session) %>
-        <small class="edit-button"><a href="/users/<%= @user.username %>/edit">Edit My Profile</a></small>
+        <small class="edit-button"><a class="edit-link" href="/users/<%= @user.username %>/edit">Edit My Profile</a></small>
     <% end %>
 </div>
 

@@ -16,13 +16,12 @@
     float: right;
 }
 
-a, a:link, a:visited {
+a.edit-link, a.edit-link:link, a.edit-link:visited {
   color: #FFFAFA;
   text-decoration: none;
 }
 
 .edit-button {
-    color: red;
     padding: 20px;
     border-radius: 30px;
     background-color: #333;
