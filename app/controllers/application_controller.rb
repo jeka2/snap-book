@@ -1,4 +1,5 @@
 require './config/environment'
+require 'json'
 
 class ApplicationController < Sinatra::Base
 
@@ -14,7 +15,14 @@ class ApplicationController < Sinatra::Base
                            
 
   get "/" do
+    # Do a featured book when user arrives
     erb :welcome
+  end
+
+  get '/test' do 
+    JSON.generate({
+      names: ['hey', 'hi']
+    })
   end
 
 end

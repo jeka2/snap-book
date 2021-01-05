@@ -1,4 +1,6 @@
 .navbar {
+  display: table;
+  width: 100%;
   overflow: hidden;
   background-color: #333;
   font-family: Arial;
@@ -62,4 +64,36 @@
 
 .session-button {
   color: blue;
+}
+
+.child {
+    display: table-cell;
+}
+
+.search-container {
+  width: 20%;
+}
+
+#search-results {
+  color: black;
+  position:absolute;
+}
+
+#search-results a {
+  color: black;
+}
+
+.book-link {
+  border: 1px solid black;
+  border-radius: 7px;
+  width:200px;
+  background-color: #F1EDEC;
+}
+
+.book-name {
+  float: left;
+}
+
+.list-item {
+  background-color: black;
 }

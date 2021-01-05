@@ -1,36 +1,18 @@
-<% if Helpers.is_logged_in?(session) %>
-  <div class="navbar">
-    <a href="#home">Home</a>
-    <a href="#my_books">My Books</a>
-    <div class="dropdown">
-      <button class="dropbtn">Dropdown
-        <i class="fa fa-caret-down"></i>
-      </button>
-      <div class="dropdown-content">
-        <a href="#">Link 1</a>
-        <a href="#">Link 2</a>
-        <a href="#">Link 3</a>
-      </div>
-    </div>
+<div class="navbar">
+  <a class="child" href="#home">Home</a>
+  <a class="child" href="#my_books">My Books</a>
+  <% if Helpers.is_logged_in?(session) %>
     <a href="/users/me">My Profile</a>
-    <a href="/logout" class="session-button logout-button">Log Out</a>
-  </div>
-<% else %>
-  <div class="navbar">
-    <a href="#home">Home</a>
-    <a href="#my_books">My Books</a>
-    <div class="dropdown">
-      <button class="dropbtn">Dropdown
-        <i class="fa fa-caret-down"></i>
-      </button>
-      <div class="dropdown-content">
-        <a href="#">Link 1</a>
-        <a href="#">Link 2</a>
-        <a href="#">Link 3</a>
-      </div>
-    </div>
-    <a href="/login" class="session-button login-button">Log In</a>
-  </div>
-<% end %>
+    <a href="/logout" class="child session-button logout-button">Log Out</a>
+  <% else %>
+    <a href="/login" class="child session-button login-button">Log In</a>
+  <% end %>
+<div class="child search-container">
+  <input id="search-bar" type="text" name="books" />
+  <ul id="search-results">
+    
+  </ul>
+</div>
+</div>
 
 <link rel="stylesheet" href="/stylesheets/navbar.css" />
