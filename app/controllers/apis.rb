@@ -20,8 +20,8 @@ module Api
     end
 
     class Googlebooks
-        def self.get_books(search_param)
-            GoogleBooks.search(search_param)
+        def self.get_books(key_word, param)
+            GoogleBooks.search(key_word, param)
         end
     end
 end

@@ -19,20 +19,4 @@ class ApplicationController < Sinatra::Base
     erb :welcome
   end
 
-  get '/test' do 
-    # look though database for matches
-    book_list = Api::Googlebooks.get_books(params[:name])
-    # populate database if not there
-    info_to_display = Array.new
-    book_list.each_with_index do |book, i|
-      info_to_display << {
-        title: book.title,
-        image: book.image_link(:zoom => 5),
-        isbn: book.isbn
-      }
-    end
-
-    JSON.generate(info_to_display)
-  end
-
 end

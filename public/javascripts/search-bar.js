@@ -1,19 +1,19 @@
 window.onload = (e) => {
     const searchBar = document.getElementById('search-bar');
-    if (searchBar) {
-        let timeOut;
-        searchBar.addEventListener('keyup', (e) => {
-            if (timeOut) { clearTimeout(timeOut); }
-            timeOut = setTimeout(() => { makeRequest(searchBar.value); }, 500);
-        });
-    }
+    let listItem = document.getElementById('search-results');
+    let timeOut;
+    searchBar.addEventListener('keyup', (e) => {
+        if (timeOut) { clearTimeout(timeOut); }
+        timeOut = setTimeout(() => { getBooks(searchBar.value, listItem); }, 500);
+    });
+    window.addEventListener('click', (e) => {
+        if (listItem.firstChild) { // if the search bar has results
+            listItem.innerHTML = "";
+        }
+    });
 }
 
-function makeRequest(enteredInfo) {
-    getBooks(enteredInfo);
-}
-
-async function getBooks(name) {
+async function getBooks(title, list) {
     let listItem = document.getElementById('search-results');
     let result;
 
@@ -21,9 +21,9 @@ async function getBooks(name) {
         result = await $.ajax({
             url: '/test',
             type: 'GET',
-            data: { 'name': name },
+            data: { 'title': title },
             success: function (data, status, xhr) {
-                appendNames(data, listItem);
+                appendNames(data, list);
             },
             dataType: "json"
         });
@@ -33,6 +33,7 @@ async function getBooks(name) {
 }
 
 function appendNames(bookInfo, ul) {
+    console.log(bookInfo)
     ul.innerHTML = "";
     for (let i = 0; i < bookInfo.length; i++) {
         const listItem = document.createElement("LI");
@@ -42,7 +43,7 @@ function appendNames(bookInfo, ul) {
         const bookLink = document.createElement("A");
         bookLink.classList.add('book-link');
         bookLink.classList.add(`link-${i + 1}`);
-        bookLink.href = `/books/${bookInfo[i].title}`;
+        bookLink.href = `/books/${bookInfo[i].id}`;
 
         const bookName = document.createElement("P");
         bookName.classList.add('book-name');
