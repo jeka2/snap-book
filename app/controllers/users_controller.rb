@@ -20,7 +20,7 @@ class UsersController < ApplicationController
             give_token
             redirect to '/'
         else
-            add_error(error_list[:bad_credentials])
+            add_error(User.error_list[:bad_credentials])
             set_flash
             redirect to '/login'
         end
