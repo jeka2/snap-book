@@ -33,7 +33,7 @@
 }
 
 .navbar a:hover, .dropdown:hover .dropbtn {
-  background-color: red;
+  background-color: rgb(124, 112, 112);
 }
 
 .dropdown-content {
@@ -83,17 +83,36 @@
   color: black;
 }
 
+#search-bar {
+  width: 200px;
+  height: 30px;
+  margin-top: 8px;
+  border-radius: 20px;
+}
+
 .book-link {
   border: 1px solid black;
   border-radius: 7px;
   width:200px;
+  height: 50px;
   background-color: #F1EDEC;
 }
 
 .book-name {
   float: left;
+  width: 66%;
+  font-size: 12px;
 }
 
 .list-item {
   background-color: black;
+}
+
+.book-image {
+  display: block;
+  float: right;
+  max-width:60px;
+  max-height:80px;
+  width: 34%;
+  height: auto;
 }

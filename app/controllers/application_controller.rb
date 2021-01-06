@@ -19,10 +19,4 @@ class ApplicationController < Sinatra::Base
     erb :welcome
   end
 
-  get '/test' do 
-    JSON.generate({
-      names: ['hey', 'hi']
-    })
-  end
-
 end
