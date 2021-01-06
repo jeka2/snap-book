@@ -1,5 +1,5 @@
 class BooksController < ApplicationController
-    get '/test' do 
+    get '/books/search_bar' do 
         return JSON.generate([]) if params[:title].strip == ""
 
         books_in_database = Book.where("title LIKE ?", "%#{params[:title]}%").limit(5)
@@ -31,5 +31,9 @@ class BooksController < ApplicationController
             end
         end
         JSON.generate(info_to_display)
+  end
+
+  get '/books/:google_id' do 
+    book = Book.find_by(google_id: params[:google_id])
   end
 end

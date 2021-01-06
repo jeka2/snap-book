@@ -19,7 +19,7 @@ async function getBooks(title, list) {
 
     try {
         result = await $.ajax({
-            url: '/test',
+            url: '/books/search_bar',
             type: 'GET',
             data: { 'title': title },
             success: function (data, status, xhr) {
