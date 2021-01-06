@@ -46,8 +46,8 @@ class UsersController < ApplicationController
         username = params[:username]
         password = params[:password]
         
-        proper_username?(username)
-        proper_password?(password, params[:password_auth])
+        User.proper_username?(username)
+        User.proper_password?(password, params[:password_auth])
         
         if @flash.empty? 
             @user = User.new(username: params[:username])
@@ -89,29 +89,6 @@ private
         if session[:flash]
             add_error(session.delete(:flash))
         end
-    end
-
-    def proper_username?(username)
-        username = username.strip # Strips leading a trailing whitespace
-        user = User.find_by(username: username)
-        
-        if user then add_error(error_list[:user_exists]) end
-        if username.length < 6 || username.match(/\s/) then add_error(error_list[:wrong_username]) end
-    end
-
-    def proper_password?(password, password_auth)
-        add_error(error_list[:no_match]) if password != password_auth
-        add_error(error_list[:wrong_number_count]) unless password.match(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)
-    end
-
-    def error_list
-        {
-            no_match: "The passwords you entered do not match.",
-            wrong_number_count: "The password must be between 8 and 30 characters long and contain at least one letter and number.",
-            user_exists: "The user by that name already exists. Please choose a different name.",
-            wrong_username: "Please make sure the length of your username is between 6 and 30 characters long and it contains no spaces.",
-            bad_credentials: "Username and/or password incorrect"
-        }
     end
 
 end
