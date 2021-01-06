@@ -4,7 +4,7 @@ window.onload = (e) => {
         let timeOut;
         searchBar.addEventListener('keyup', (e) => {
             if (timeOut) { clearTimeout(timeOut); }
-            timeOut = setTimeout(() => { makeRequest(searchBar.value); }, 1000);
+            timeOut = setTimeout(() => { makeRequest(searchBar.value); }, 500);
         });
     }
 }
@@ -32,10 +32,9 @@ async function getBooks(name) {
     }
 }
 
-function appendNames(bookNames, ul) {
+function appendNames(bookInfo, ul) {
     ul.innerHTML = "";
-    bookNames = bookNames.names;
-    for (let i = 0; i < bookNames.length; i++) {
+    for (let i = 0; i < bookInfo.length; i++) {
         const listItem = document.createElement("LI");
         listItem.classList.add('list-item');
         listItem.classList.add(`item-${i + 1}`);
@@ -43,14 +42,20 @@ function appendNames(bookNames, ul) {
         const bookLink = document.createElement("A");
         bookLink.classList.add('book-link');
         bookLink.classList.add(`link-${i + 1}`);
-        bookLink.href = `/books/${bookNames[i]}`;
+        bookLink.href = `/books/${bookInfo[i].title}`;
 
         const bookName = document.createElement("P");
         bookName.classList.add('book-name');
         bookName.classList.add(`name-${i + 1}`);
-        bookName.innerHTML = bookNames[i];
+        bookName.innerHTML = bookInfo[i].title;
+
+        const bookImg = document.createElement("IMG");
+        bookImg.classList.add('book-image');
+        bookImg.classList.add(`image-${i + 1}`);
+        bookImg.src = bookInfo[i].image;
 
         bookLink.appendChild(bookName);
+        bookLink.appendChild(bookImg);
         listItem.appendChild(bookLink);
         ul.appendChild(listItem);
     }
