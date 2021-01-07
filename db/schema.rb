@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210106220208) do
+ActiveRecord::Schema.define(version: 20210106233341) do
 
   create_table "authors", force: :cascade do |t|
     t.string "name"
@@ -28,6 +28,13 @@ ActiveRecord::Schema.define(version: 20210106220208) do
     t.integer "author_id"
     t.integer "user_id"
     t.string  "google_id"
+    t.string  "authors"
+    t.string  "publisher"
+    t.integer "page_count"
+    t.string  "categories"
+    t.integer "average_rating"
+    t.integer "ratings_count"
+    t.string  "info_link"
   end
 
   create_table "users", force: :cascade do |t|

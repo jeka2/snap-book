@@ -3,11 +3,17 @@ window.onload = (e) => {
     let listItem = document.getElementById('search-results');
     let timeOut;
     searchBar.addEventListener('keyup', (e) => {
+        console.log('hi')
         if (timeOut) { clearTimeout(timeOut); }
         timeOut = setTimeout(() => { getBooks(searchBar.value, listItem); }, 500);
+
+        if (e.key == "Backspace" && searchBar.value == "") {
+            listItem.innerHTML = "";
+            if (timeOut) { clearTimeout(timeOut); }
+        }
     });
     window.addEventListener('click', (e) => {
-        if (listItem.firstChild) { // if the search bar has results
+        if (listItem.firstChild && e.target.id != searchBar.id) {
             listItem.innerHTML = "";
         }
     });
