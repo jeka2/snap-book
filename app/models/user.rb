@@ -1,6 +1,5 @@
 class User < ActiveRecord::Base
-    has_many :books
-    has_many :authors, through: :books
+    has_many :user_books
 
     def password
         @password ||= BCrypt::Password.new(password_hash)
