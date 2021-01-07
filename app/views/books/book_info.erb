@@ -1,0 +1,31 @@
+<h2><%= @book.title %></h2>
+<% if @book.isbn %>
+    <div id="cover-info">
+        <img src="http://covers.openlibrary.org/b/isbn/<%= @book.isbn %>-L.jpg"><br>
+        <small>
+            Image provided courtesy of openlibrary<a href="http://openlibrary.org/isbn/<%= @book.isbn %>" target="_blank"><br>click here</a> to view their page of this book
+        </small>
+    </div>
+<% end %>
+<% if Helpers.is_logged_in?(session) %>
+    <form action="/books/add_to_me" method="post">
+        <input type="hidden" id="book-to-add" name="book" value="<%= @book.id %>">
+        <input type="submit" value="Add to my books">
+    </form>
+<% end %>
+Description: <%= @book.description %><br>
+Authors: <%= @book.authors %><br>
+Categories: <%= @book.categories %><br>
+average_rating: <%= @book.average_rating %><br>
+ratings_count: <%= @book.ratings_count %><br>
+info_link: <%= @book.info_link %><br>
+
+<form action="/login" method="post">
+    <label for="username">Username:</label><br>
+    <input type="text" name="username" id="username" maxlength="30"><br>
+    <label for="password">Password:<label><br>
+    <input type="text" name="password" id="password" maxlength="30">
+    <input type="submit" name="submit">
+</form>
+<br>
+<small><a href="/signup">Need to Sign Up?</a><small>
