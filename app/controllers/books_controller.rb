@@ -4,7 +4,12 @@ class BooksController < ApplicationController
     end
 
     post '/books/add_to_me' do 
-        
+        user = User.find(Helpers.current_user(session))
+        book =  book.find(params[:book_id].to_i)
+        if !user.books.includes?(book)
+           user.books << book 
+        end 
+
     end
 
     get '/books/:google_id' do 

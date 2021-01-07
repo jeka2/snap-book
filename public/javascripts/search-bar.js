@@ -3,7 +3,6 @@ window.onload = (e) => {
     let listItem = document.getElementById('search-results');
     let timeOut;
     searchBar.addEventListener('keyup', (e) => {
-        console.log('hi')
         if (timeOut) { clearTimeout(timeOut); }
         timeOut = setTimeout(() => { getBooks(searchBar.value, listItem); }, 500);
 

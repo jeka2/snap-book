@@ -9,7 +9,7 @@
 <% end %>
 <% if Helpers.is_logged_in?(session) %>
     <form action="/books/add_to_me" method="post">
-        <input type="hidden" id="book-to-add" name="book" value="<%= @book.id %>">
+        <input type="hidden" id="book-to-add" name="book_id" value="<%= @book.id %>">
         <input type="submit" value="Add to my books">
     </form>
 <% end %>
@@ -19,13 +19,3 @@ Categories: <%= @book.categories %><br>
 average_rating: <%= @book.average_rating %><br>
 ratings_count: <%= @book.ratings_count %><br>
 info_link: <%= @book.info_link %><br>
-
-<form action="/login" method="post">
-    <label for="username">Username:</label><br>
-    <input type="text" name="username" id="username" maxlength="30"><br>
-    <label for="password">Password:<label><br>
-    <input type="text" name="password" id="password" maxlength="30">
-    <input type="submit" name="submit">
-</form>
-<br>
-<small><a href="/signup">Need to Sign Up?</a><small>
