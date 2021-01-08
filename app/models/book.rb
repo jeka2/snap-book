@@ -1,6 +1,7 @@
 class Book < ActiveRecord::Base
     belongs_to :author 
     has_many :user_books
+    has_many :users, through: :user_books
 
     def populate_info(info)
         info_to_store = Book.column_names.reject { |col| col == "user_id" || col == "author_id" || col == "id" }

@@ -12,7 +12,9 @@ class ApplicationController < Sinatra::Base
                            :path => '/',
                            :secret => 'your_secret'
 
-                           
+  before '/*' do 
+    @flash = []
+  end
 
   get "/" do
     # Do a featured book when user arrives

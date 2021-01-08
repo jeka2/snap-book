@@ -1,0 +1,24 @@
+#favorite-container {
+    display: inline-flex;
+    border: 1px solid black;
+    border-radius: 3px;
+}
+
+#user-has-book {
+    font-size: 13px;
+    margin: 0 2px;
+}
+
+.check {
+    height: 18px;
+    background-color: green;
+}
+
+.cicle {
+    height: 18px;
+    background-color: red;
+}
+
+.check:hover, .cicle:hover {
+    cursor: pointer;
+}

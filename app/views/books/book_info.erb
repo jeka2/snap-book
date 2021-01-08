@@ -7,15 +7,20 @@
         </small>
     </div>
 <% end %>
-<% if Helpers.is_logged_in?(session) %>
-    <form action="/books/add_to_me" method="post">
-        <input type="hidden" id="book-to-add" name="book_id" value="<%= @book.id %>">
-        <input type="submit" value="Add to my books">
-    </form>
+<% if @user %>
+    <div id="favorite-container">
+        <% if @user.books.include?(@book) %>
+            <small id="user-has-book">Unfavorite</small>
+            <img id="book-remove-button" class="<%= @book.id %> favorite check" src="/images/favicon-checkmark.png">
+        <% else %>
+            <small id="user-has-book">Favorite</small>
+            <img id="book-add-button" class="<%= @book.id %> favorite circle" src="/images/favicon-circle.png">
+        <% end %>
+    </div>
 <% end %>
-Description: <%= @book.description %><br>
-Authors: <%= @book.authors %><br>
-Categories: <%= @book.categories %><br>
-average_rating: <%= @book.average_rating %><br>
-ratings_count: <%= @book.ratings_count %><br>
-info_link: <%= @book.info_link %><br>
+<% @display_info.each do |k,v| %>
+    <h3 class="book_<%= k %>"><%= Helpers.displayable_version(k) %>:</h3><br>
+    <p class="book_<%= k %>_content"><%= v %></p>
+<% end %>
+
+<link rel="stylesheet" href="/stylesheets/book/info-page.css" />
