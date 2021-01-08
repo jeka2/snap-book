@@ -57,4 +57,15 @@ class Book < ActiveRecord::Base
         end
         JSON.generate(info_to_send)
     end
+
+    def self.attributes_to_display(book)
+        all_info = book.attributes.except('id', 'title', 'image', 'author_id', 'user_id', 'google_id')
+        display_info = Hash.new
+
+        all_info.each do |k,v|
+            next unless v && v != ""
+            display_info[k] = v
+        end
+        display_info
+    end
 end 

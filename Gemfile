@@ -15,6 +15,7 @@ gem 'sinatra-flash'
 gem 'faker'
 gem 'dotenv'
 gem 'googlebooks'
+gem 'random-word'
 
 group :test do
   gem 'rspec'

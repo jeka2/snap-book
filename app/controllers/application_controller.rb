@@ -14,7 +14,32 @@ class ApplicationController < Sinatra::Base
 
   get "/" do
     # Do a featured book when user arrives
-    erb :welcome
+    if Book.count > 0 # If any books in the database, display those
+      found = false
+      while !found
+        begin
+          random_index = rand(1..Book.last.id)
+          @book = Book.find(random_index)
+        rescue ActiveRecord::RecordNotFound
+
+        else
+          found = true
+        end
+      end
+    else
+      choices = ["nouns", "adjs"]
+      found = false
+      while !found
+        random_word = RandomWord.send(choices.sample, not_longer_than: 20).next
+        @book = Book.get_book_sample(size: 1, title: Helpers.displayable_version(random_word))
+        found = true if @book
+      end
+    end
+
+    @user = User.find(Helpers.current_user(session))
+    @display_info = Book.attributes_to_display(@book)
+
+    erb :'books/book_info'
   end
 
 end

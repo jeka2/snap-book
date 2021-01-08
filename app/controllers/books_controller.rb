@@ -18,13 +18,7 @@ class BooksController < ApplicationController
     get '/books/:google_id' do 
         @user = User.find(Helpers.current_user(session)) if Helpers.is_logged_in?(session)
         @book = Book.find_by(google_id: params[:google_id])
-        all_info = @book.attributes.except('id', 'title', 'image', 'author_id', 'user_id', 'google_id')
-        @display_info = Hash.new
-
-        all_info.each do |k,v|
-            next unless v && v != ""
-            @display_info[k] = v
-        end
+        @display_info = Book.attributes_to_display(@book)
 
         erb :'books/book_info'
     end
