@@ -1,9 +1,8 @@
 <% if @flash && !@flash.empty?%>
     <div id="flash">
         <% @flash.flatten.each_with_index do |mssg, i| %>
-            <div class="flash message-#{i+1}"><%= mssg %></div>
+            <div class="flash message-#{i+1}"><%= mssg %><div id="close">X</div></div>
         <% end %>
-        <div id="close">X</div>
     </div>
 <% end %>
 

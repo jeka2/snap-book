@@ -1,6 +1,8 @@
 window.onload = (e) => {
 
-    blah();
+    favorite();
+
+    flash();
 
     const searchBar = document.getElementById('search-bar');
     let listItem = document.getElementById('search-results');
@@ -41,7 +43,6 @@ async function getBooks(title, list) {
 }
 
 function appendNames(bookInfo, ul) {
-    console.log(bookInfo)
     ul.innerHTML = "";
     for (let i = 0; i < bookInfo.length; i++) {
         const listItem = document.createElement("LI");
@@ -69,8 +70,8 @@ function appendNames(bookInfo, ul) {
         ul.appendChild(listItem);
     }
 }
-
-function blah() {
+///////////////////////////////////
+function favorite() {
     let container = document.getElementById('favorite-container');
     let btn = document.querySelector('.favorite');
     if (btn) {
@@ -127,4 +128,16 @@ function appendUnfavoriteOption(bookId, container) {
 
     container.appendChild(unfavoriteWriting);
     container.appendChild(unfavoriteCircle);
+}
+///////////////////////////
+
+function flash() {
+    const flash = document.getElementById('flash');
+    const closeButton = document.getElementById('close');
+    if (flash) {
+        setTimeout(() => { flash.remove(); }, 3000);
+        closeButton.addEventListener('click', () => {
+            flash.remove();
+        })
+    }
 }
