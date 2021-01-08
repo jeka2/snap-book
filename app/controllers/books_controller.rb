@@ -8,7 +8,8 @@ class BooksController < ApplicationController
         book =  Book.find(params[:book_id].to_i)
 
         if user.books.include?(book)
-
+            relation = UserBook.where(user_id: user.id, book_id: book.id).first
+            UserBook.destroy(relation.id)
         else
             user.books << book
         end 
