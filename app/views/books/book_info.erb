@@ -7,17 +7,9 @@
         </small>
     </div>
 <% end %>
-<% if @user %>
-    <div id="favorite-container">
-        <% if @user.books.include?(@book) %>
-            <small id="user-has-book">Unfavorite</small>
-            <img id="book-remove-button" class="<%= @book.id %> favorite check" src="/images/favicon-checkmark.png">
-        <% else %>
-            <small id="user-has-book">Favorite</small>
-            <img id="book-add-button" class="<%= @book.id %> favorite circle" src="/images/favicon-circle.png">
-        <% end %>
-    </div>
-<% end %>
+
+<%= erb :'partials/favorite_button', :locals => { user: @user, book: @book } %>
+
 <% @display_info.each do |k,v| %>
     <h3 class="book_<%= k %>"><%= Helpers.displayable_version(k) %>:</h3><br>
     <p class="book_<%= k %>_content"><%= v %></p>

@@ -1,16 +1,18 @@
 window.onload = (e) => {
     let container = document.getElementById('favorite-container');
     let btn = document.querySelector('.favorite');
-    btn.addEventListener('click', (e) => {
-        $.ajax({
-            url: '/books/add_remove_from_me',
-            type: 'post',
-            data: { 'book_id': e.target.classList[0] },
-            success: function (data, status, xhr) {
-                changeButton(btn, container);
-            }
-        })
-    });
+    if (btn) {
+        btn.addEventListener('click', (e) => {
+            $.ajax({
+                url: '/books/add_remove_from_me',
+                type: 'post',
+                data: { 'book_id': e.target.classList[0] },
+                success: function (data, status, xhr) {
+                    changeButton(btn, container);
+                }
+            })
+        });
+    }
 }
 
 function changeButton(btn, container) {
@@ -49,7 +51,7 @@ function appendUnfavoriteOption(bookId, container) {
     unfavoriteCircle.classList.add(`${bookId}`);
     unfavoriteCircle.classList.add('favorite');
     unfavoriteCircle.classList.add('check');
-    unfavoriteCircle.src = "/images/favicon-check.png";
+    unfavoriteCircle.src = "/images/favicon-checkmark.png";
 
     container.appendChild(unfavoriteWriting);
     container.appendChild(unfavoriteCircle);

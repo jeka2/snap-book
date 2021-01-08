@@ -1,4 +1,7 @@
 window.onload = (e) => {
+
+    blah();
+
     const searchBar = document.getElementById('search-bar');
     let listItem = document.getElementById('search-results');
     let timeOut;
@@ -65,4 +68,63 @@ function appendNames(bookInfo, ul) {
         listItem.appendChild(bookLink);
         ul.appendChild(listItem);
     }
+}
+
+function blah() {
+    let container = document.getElementById('favorite-container');
+    let btn = document.querySelector('.favorite');
+    if (btn) {
+        btn.addEventListener('click', (e) => {
+            $.ajax({
+                url: '/books/add_remove_from_me',
+                type: 'post',
+                data: { 'book_id': e.target.classList[0] },
+                success: function (data, status, xhr) {
+                    changeButton(btn, container);
+                }
+            })
+        });
+    }
+}
+
+function changeButton(btn, container) {
+    const bookId = btn.classList[0];
+    if (btn.classList[2] == "check") { appendFavoriteOption(bookId, container); }
+    else { appendUnfavoriteOption(bookId, container); }
+}
+
+function appendFavoriteOption(bookId, container) {
+    container.innerHTML = "";
+
+    const favoriteWriting = document.createElement("SMALL");
+    favoriteWriting.id = "user-has-book";
+    favoriteWriting.innerHTML = "Favorite";
+
+    const favoriteCircle = document.createElement("IMG");
+    favoriteCircle.id = "book-add-button";
+    favoriteCircle.classList.add(`${bookId}`);
+    favoriteCircle.classList.add('favorite');
+    favoriteCircle.classList.add('circle');
+    favoriteCircle.src = "/images/favicon-circle.png";
+
+    container.appendChild(favoriteWriting);
+    container.appendChild(favoriteCircle);
+}
+
+function appendUnfavoriteOption(bookId, container) {
+    container.innerHTML = "";
+
+    const unfavoriteWriting = document.createElement("SMALL");
+    unfavoriteWriting.id = "user-has-book";
+    unfavoriteWriting.innerHTML = "Unfavorite";
+
+    const unfavoriteCircle = document.createElement("IMG");
+    unfavoriteCircle.id = "book-remove-button";
+    unfavoriteCircle.classList.add(`${bookId}`);
+    unfavoriteCircle.classList.add('favorite');
+    unfavoriteCircle.classList.add('check');
+    unfavoriteCircle.src = "/images/favicon-checkmark.png";
+
+    container.appendChild(unfavoriteWriting);
+    container.appendChild(unfavoriteCircle);
 }

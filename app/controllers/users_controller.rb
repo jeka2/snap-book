@@ -6,12 +6,15 @@ class UsersController < ApplicationController
     get '/login' do 
         redirect to '/' if Helpers.is_logged_in?(session)
 
+        clear_errors
         display_flash
 
         erb :'users/login'
     end
 
     post '/login' do 
+        clear_errors
+
         @user = User.find_by(username: params[:username])
 
         if @user && @user.password == params[:password]
@@ -32,12 +35,15 @@ class UsersController < ApplicationController
     get '/signup' do 
         redirect to '/' if Helpers.is_logged_in?(session)
 
+        clear_errors
         display_flash
 
         erb :'users/signup'
     end
 
     post '/signup' do 
+        clear_errors
+
         username = params[:username]
         password = params[:password]
         
@@ -119,6 +125,10 @@ private
 
     def add_error(err)
         @flash << err
+    end
+
+    def clear_errors
+        @flash = []
     end
 
     def set_flash
