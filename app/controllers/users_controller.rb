@@ -103,10 +103,6 @@ class UsersController < ApplicationController
     end
 
     get 'users/:username/books' do 
-
-    end 
-
-    get 'users/:username/books' do 
         @user = User.find_by(username: params[:username])
         @books = UserBook.where(user_id: @user.id)
     end
