@@ -15,4 +15,14 @@ module Helpers
         end
     end
 
+    def self.set_flash(session)
+        session[:flash] = @flash
+    end
+
+    def self.display_flash(session)
+        if session[:flash]
+            add_error(session.delete(:flash))
+        end
+    end
+
 end

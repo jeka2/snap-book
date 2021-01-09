@@ -4,7 +4,7 @@ class Book < ActiveRecord::Base
     has_many :users, through: :user_books
 
     def populate_info(info)
-        info_to_store = Book.column_names.reject { |col| col == "user_id" || col == "author_id" || col == "id" }
+        info_to_store = self.class.column_names.reject { |col| col == "user_id" || col == "author_id" || col == "id" }
         info_to_store.each do |col|
             if col == "image"
                 self.image = info.image_link(:zoom => 5)
@@ -17,45 +17,25 @@ class Book < ActiveRecord::Base
     end
 
     def self.get_book_sample(size:,title:)
-        books_in_database = Book.where("title LIKE ?", "%#{title}%").limit(size)
-        info_to_send = Array.new
-        books_to_display = size
-        additional_books_to_display = books_to_display - books_in_database.size
+        # Books in the database will be prioritized for efficiency
+        books_from_database = self.many_from_database(size, title)
+        additional_amount = size - books_from_database.size
+        books_from_api = self.many_from_api(additional_amount, title, false, books_from_database) if additional_amount > 0
 
-        if books_in_database
-            books_in_database.each do |book| 
-                info_to_send << {
-                    title: book.title,
-                    image: book.image,
-                    id: book.google_id
-                }
-            end
-        end
-        # There will be 5 books displayed in the search bar
-        # If those aren't in the database yet, the api call
-        # Will be made for the remainder
-        if additional_books_to_display > 0
-            book_list = Api::Googlebooks.get_books(title, {:count => 10})
-            book_list.each do |book|
-                duplicate = false
-                # The database info may already contain a book in the list
-                info_to_send.each { |b| duplicate = true if b[:id] == book.id }
-                
-                unless duplicate
-                    new_book = Book.new
-                    new_book.populate_info(book)
-                    new_book.save!
+        info_to_send = books_from_api ? books_from_database + books_from_api : books_from_database
 
-                    info_to_send << {
-                        title: book.title,
-                        image: book.image_link(:zoom => 5),
-                        id: book.id
-                    }
-                end
-                break if info_to_send.size == size
-            end
-        end
         JSON.generate(info_to_send)
+    end
+
+    def self.random_book
+        sources = ["database", "api"]
+        if sources.sample == "database"
+            book = random_one_from_database
+            book = random_one_from_api unless book
+            book
+        else
+            random_one_from_api
+        end
     end
 
     def self.attributes_to_display(book)
@@ -67,5 +47,83 @@ class Book < ActiveRecord::Base
             display_info[k] = v
         end
         display_info
+    end
+
+    def self.random_one_from_database
+        if self.count > 0 # If any books in the database
+            found = false
+            while !found
+                begin
+                    random_index = rand(1..Book.last.id)
+                    book = self.find(random_index)
+                rescue ActiveRecord::RecordNotFound
+
+                else
+                    found = true
+                end
+            end
+            book
+        else
+            nil
+        end
+    end
+
+    def self.random_one_from_api
+        choices = ["nouns", "adjs"]
+        found = false
+        while !found
+            random_word = RandomWord.send(choices.sample, not_longer_than: 20).next
+            book = self.many_from_api(1, Helpers.displayable_version(random_word), true)
+            found = true if book
+        end
+        book[0]
+    end
+
+    def self.many_from_database(amount, title, full_info = false)
+        info_to_send = Array.new
+        books_in_database = self.where("title LIKE ?", "%#{title}%").limit(amount)
+
+        if books_in_database
+            books_in_database.each do |book| 
+                if full_info
+                    info_to_send << book
+                else
+                    info_to_send << {
+                        title: book.title,
+                        image: book.image,
+                        id: book.google_id
+                    }
+                end
+            end
+        end
+        info_to_send
+    end
+
+    def self.many_from_api(amount, title, full_info=false, potential_duplicates = [])
+        info_to_send = Array.new
+        book_list = Api::Googlebooks.get_books(title, {:count => 10})
+        book_list.each do |book|
+            duplicate = false
+            # The database info may already contain a book in the list
+            potential_duplicates.each { |b| duplicate = true if b[:id] == book.id }
+                
+            unless duplicate
+                new_book = self.new
+                new_book.populate_info(book)
+                new_book.save!
+
+                if full_info 
+                    info_to_send << new_book
+                else
+                    info_to_send << {
+                    title: book.title,
+                    image: book.image_link(:zoom => 5),
+                    id: book.id
+                }
+                end
+            end
+            break if info_to_send.size == amount
+        end
+        info_to_send
     end
 end 

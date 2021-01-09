@@ -12,6 +12,13 @@ class ApplicationController < Sinatra::Base
                            :path => '/',
                            :secret => 'your_secret'
 
+
+  after do 
+    if request.request_method == "GET"
+        session[:flash] = []
+    end
+  end
+
   get "/" do
     # Do a featured book when user arrives
     if Book.count > 0 # If any books in the database, display those
@@ -31,15 +38,20 @@ class ApplicationController < Sinatra::Base
       found = false
       while !found
         random_word = RandomWord.send(choices.sample, not_longer_than: 20).next
-        @book = Book.get_book_sample(size: 1, title: Helpers.displayable_version(random_word))
+        @book = Book.random_one_from_api
         found = true if @book
       end
     end
 
-    @user = User.find(Helpers.current_user(session))
+    @book = Book.random_book
+  
+    @user = User.find(Helpers.current_user(session)) if Helpers.current_user(session)
     @display_info = Book.attributes_to_display(@book)
 
     erb :'books/book_info'
   end
 
 end
+
+# url random
+# javascript - button and multiple files

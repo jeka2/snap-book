@@ -1,13 +1,10 @@
 require_relative '../helpers/helpers.rb'
 
 class UsersController < ApplicationController
-    include Helpers
+    # include Helpers
 
     get '/login' do 
         redirect to '/' if Helpers.is_logged_in?(session)
-
-        clear_errors
-        display_flash
 
         erb :'users/login'
     end
@@ -21,8 +18,7 @@ class UsersController < ApplicationController
             give_token
             redirect to '/'
         else
-            add_error(User.error_list[:bad_credentials])
-            set_flash
+            session[:flash] << User.error_list[:bad_credentials]
             redirect to '/login'
         end
     end
@@ -35,22 +31,17 @@ class UsersController < ApplicationController
     get '/signup' do 
         redirect to '/' if Helpers.is_logged_in?(session)
 
-        clear_errors
-        display_flash
-
         erb :'users/signup'
     end
 
     post '/signup' do 
-        clear_errors
-
         username = params[:username]
         password = params[:password]
         
-        User.proper_username?(username)
-        User.proper_password?(password, params[:password_auth])
+        User.proper_username?(username, session)
+        User.proper_password?(password, params[:password_auth], session)
         
-        if @flash.empty? 
+        if session[:flash].empty? 
             @user = User.new(username: username)
             @user.password = password
             @user.save!
@@ -58,7 +49,6 @@ class UsersController < ApplicationController
             give_token
             redirect to '/'
         else
-            set_flash
             redirect '/signup'
         end
     end
@@ -113,32 +103,12 @@ class UsersController < ApplicationController
     end
 
     get 'users/:username/books' do 
+
+    end 
+
+    get 'users/:username/books' do 
         @user = User.find_by(username: params[:username])
         @books = UserBook.where(user_id: @user.id)
-    end
-
-private
-
-    def give_token
-        session[:user_id] = @user.id
-    end
-
-    def add_error(err)
-        @flash << err
-    end
-
-    def clear_errors
-        @flash = []
-    end
-
-    def set_flash
-        session[:flash] = @flash
-    end
-
-    def display_flash
-        if session[:flash]
-            add_error(session.delete(:flash))
-        end
     end
 
 end

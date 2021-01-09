@@ -19,17 +19,17 @@ class User < ActiveRecord::Base
         end
     end
     
-    def self.proper_username?(username)
+    def self.proper_username?(username, session)
         username = username.strip # Strips leading a trailing whitespace
         user = User.find_by(username: username)
         
-        if user then add_error(error_list[:user_exists]) end
-        if username.length < 6 || username.match(/\s/) then add_error(error_list[:wrong_username]) end
+        if user then session[:flash] << error_list[:user_exists] end
+        if username.length < 6 || username.match(/\s/) then session[:flash] << error_list[:wrong_username] end
     end
 
-    def self.proper_password?(password, password_auth)
-        add_error(error_list[:no_match]) if password != password_auth
-        add_error(error_list[:wrong_number_count]) unless password.match(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)
+    def self.proper_password?(password, password_auth, session)
+        session[:flash] << error_list[:no_match] if password != password_auth
+        session[:flash] << error_list[:wrong_number_count] unless password.match(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)
     end
 
     def self.error_list

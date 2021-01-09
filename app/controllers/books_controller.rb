@@ -3,16 +3,19 @@ class BooksController < ApplicationController
         Book.get_book_sample(size: 5, title: params[:title])
     end
 
-    post '/books/add_remove_from_me' do 
+    post '/books/self_add' do 
         user = User.find(Helpers.current_user(session))
-        book =  Book.find(params[:book_id].to_i)
+        book = Book.find(params[:book_id].to_i)
 
-        if user.books.include?(book)
-            relation = UserBook.where(user_id: user.id, book_id: book.id).first
-            UserBook.destroy(relation.id)
-        else
-            user.books << book
-        end 
+        user.books << book
+    end
+
+    delete '/books/self_remove' do 
+        user = User.find(Helpers.current_user(session))
+        book = Book.find(params[:book_id].to_i)
+
+        relation = UserBook.where(user_id: user.id, book_id: book.id).first
+        UserBook.destroy(relation.id)
     end
 
     get '/books/:google_id' do 
