@@ -4,6 +4,8 @@ window.onload = (e) => {
 
     flash();
 
+    imageCheck();
+
     const searchBar = document.getElementById('search-bar');
     let listItem = document.getElementById('search-results');
     let timeOut;
@@ -118,3 +120,17 @@ function flash() {
         })
     }
 }
+////////////////////////////
+
+function imageCheck() {
+    const coverInfo = document.getElementById('cover-info');
+    if (coverInfo) {
+        const img = coverInfo.childNodes[1];
+        if (img.height === 1) {
+            img.src = "/images/default-cover.jpg";
+            coverInfo.childNodes[4].innerHTML = "";
+        }
+    }
+}
+
+
