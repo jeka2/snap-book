@@ -4,6 +4,8 @@ window.onload = (e) => {
 
     flash();
 
+    imageCheck();
+
     const searchBar = document.getElementById('search-bar');
     let listItem = document.getElementById('search-results');
     let timeOut;
@@ -118,3 +120,26 @@ function flash() {
         })
     }
 }
+////////////////////////////
+
+function imageCheck() {
+    let size;
+    if (window.location.href.match(/.*\/users\/.*\/books/)) {
+        size = 'M';
+    }
+    else {
+        size = 'L';
+    }
+    const coverInfo = document.querySelectorAll('.cover-info');
+    if (coverInfo.length > 0) {
+        for (let i = 0; i < coverInfo.length; i++) {
+            let img = coverInfo[i].childNodes[1];
+            if (img.height === 1) {
+                img.src = `/images/default-cover-${size}.jpg`;
+                coverInfo[i].childNodes[4].innerHTML = "";
+            }
+        }
+    }
+}
+
+

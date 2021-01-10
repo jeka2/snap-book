@@ -10,8 +10,6 @@ class UsersController < ApplicationController
     end
 
     post '/login' do 
-        clear_errors
-
         @user = User.find_by(username: params[:username])
 
         if @user && @user.password == params[:password]
@@ -24,7 +22,10 @@ class UsersController < ApplicationController
     end
 
     get '/logout' do 
-        session.delete(:user_id)
+        redirect to '/' unless Helpers.is_logged_in?(session)
+
+        remove_token
+        
         redirect to '/'
     end
 
@@ -102,9 +103,27 @@ class UsersController < ApplicationController
         redirect to "/users/#{params[:username]}"
     end
 
-    get 'users/:username/books' do 
+    get '/users/:username/books' do 
         @user = User.find_by(username: params[:username])
-        @books = UserBook.where(user_id: @user.id)
+        books = @user.books
+        @displayable_info = []
+
+        books.each_with_index do |book, i|
+            @displayable_info << Book.attributes_to_display(book)
+            @displayable_info[i]["id"] = book.google_id
+            @displayable_info[i]["title"] = book.title
+        end
+
+        erb :'users/books'
+    end
+private 
+
+    def give_token
+        session[:user_id] = @user.id
+    end
+
+    def remove_token
+        session.delete(:user_id)
     end
 
 end

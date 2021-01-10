@@ -1,11 +1,6 @@
 <h2><%= @book.title %></h2>
 <% if @book.isbn %>
-    <div id="cover-info">
-        <img src="http://covers.openlibrary.org/b/isbn/<%= @book.isbn %>-L.jpg"><br>
-        <small>
-            Image provided courtesy of openlibrary<a href="http://openlibrary.org/isbn/<%= @book.isbn %>" target="_blank"><br>click here</a> to view their page of this book
-        </small>
-    </div>
+    <%= erb :'partials/cover_info', :locals=> { isbn: @book.isbn ? @book.isbn : "N/A", size: "L" } %>
 <% end %>
 
 <%= erb :'partials/favorite_button', :locals => { user: @user, book: @book } %>

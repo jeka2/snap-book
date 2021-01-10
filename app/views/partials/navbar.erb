@@ -1,7 +1,7 @@
 <div class="navbar">
   <a class="child" href="/">Home</a>
   <% if Helpers.is_logged_in?(session) %>
-    <a class="child" href="/users/#{Helpers.current_user(session)}/books">My Books</a>
+    <a class="child" href="/users/<%= User.find(Helpers.current_user(session)).username %>/books">My Books</a>
     <a href="/users/me">My Profile</a>
     <a href="/logout" class="child session-button logout-button">Log Out</a>
   <% else %>
