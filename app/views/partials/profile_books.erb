@@ -1,0 +1,28 @@
+<% if !page_owner.books.empty? %>    
+    <%= page_owner.id == Helpers.current_user(session) ? "My Books" : "#{page_owner.username}'s Books" %>:<br>
+    <% books.each do |book| %>
+        <div class="book-info-container">
+        <a class="page-link" href='<%= book.google_id ? "/books/#{book.google_id}" : "/books/created/#{book.id}" %>'
+            <% Book.columns_for_creating.each do |col| %>
+                <% if book[col] != nil && (col == "title" || col == "description" || col == "authors" || col == "page_count") %> 
+                    <h3 class="attribute"><%= Helpers.displayable_version(col) %>:</h3>
+                    <p class="attribute-info"><%= book[col].truncate(100) %></p>
+                    <br class="profile-breaker">
+                <% end %>
+            <% end %>
+            <% if !book.google_id && page_owner.id == Helpers.current_user(session) %>
+                <small><a href="/user/<%= @user.username %>/books/<%= book.id %>/edit">Edit This Book</a></small> |
+                <form action="/user/<%= @user.username %>/books/<%= book.id %>/delete" method="POST">
+                    <input id="hidden" type="hidden" name="_method" value="delete">
+                    <input id="hidden" type="hidden" name="username" value="<%= @user.username %>">
+                    <input id="hidden" type="hidden" name="book_id" value="<%= book.id %>">
+                    <input type="submit" value="delete">
+                </form>
+            <% end %>
+        </a>
+        </div>
+    <% end %>
+<% else %>
+    The user doesn't have any books to show
+<% end %>
+

@@ -1,0 +1,12 @@
+<form action="/user/<%= @user.username %>/books/<%= @book.id %>/edit" method="post">
+    <input id="hidden" type="hidden" name="_method" value="patch">
+    <% @edit_columns.each do |attr| %>
+        <label for="<%= attr %>"><%= Helpers.displayable_version(attr) %>:</label>
+        <% if attr == "average_rating" || attr == "ratings_count" %>
+            <input type="number" value="<%= @book[attr] %>" name="<%= attr %>" id="<%= attr %>"><br>
+        <% else %>
+            <input type="text" value="<%= @book[attr] %>" name="<%= attr %>" id="<%= attr %>"><br>
+        <% end %>
+    <% end %>
+    <input type="submit" value="Edit Book">
+</form>

@@ -3,17 +3,57 @@
 }
 
 .user-info-wrapper {
-    display: block;
-    float: right;
+    padding: 2px;
+    display: flex;
 }
 
-.user-info {
-    text-indent: 25px;
+.user-books-info {
+    overflow: scroll;
+    flex: 3;
+    margin-right: 6px;
+    height: 600px;
 }
 
-.user-image {
+.user-personal-info {
+    flex: 2;
+}
+
+.book-info-container {
+    border: 1px solid black;
+    margin-right: 10px;
+    line-height: 1;
+}
+
+.book-info-container:hover {
+    background-color: azure;
+}
+
+.attribute {
+   text-indent: 2px;
+   font-size: 10px;
+   margin: 2px 0;
+   padding: 0px;
+}
+
+.attribute-info {
+    text-indent: 8px;
+    font-size: 12px;
+    margin: 2px 0;
+    padding: 0px;
+}
+
+.profile-breaker {
     display: block;
-    float: right;
+    margin: 1px;
+}
+
+.page-link {
+    text-decoration: none;
+    color: black;
+}
+
+.page-link:hover {
+    
 }
 
 a.edit-link, a.edit-link:link, a.edit-link:visited {

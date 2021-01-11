@@ -31,7 +31,7 @@ class Book < ActiveRecord::Base
         sources = ["database", "api"]
         if sources.sample == "database"
             book = random_one_from_database
-            book = random_one_from_api unless book
+            book = random_one_from_api unless book # Only if no books yet
             book
         else
             random_one_from_api
@@ -126,4 +126,13 @@ class Book < ActiveRecord::Base
         end
         info_to_send
     end
+
+    ####
+
+    def self.columns_for_creating
+        self.column_names.reject do |col|
+            col == 'id' || col == 'isbn' || col == 'image' || col == 'author_id' || col == 'user_id' || col == 'google_id' || col == 'publisher' || col =='info_link'
+        end
+    end
+
 end 

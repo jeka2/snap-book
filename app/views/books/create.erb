@@ -1,0 +1,11 @@
+<form action="/user/<%= @username %>/my_book/create" method="post">
+    <% @create_columns.each do |attr| %>
+        <label for="<%= attr %>"><%= Helpers.displayable_version(attr) %>:</label>
+        <% if attr == "average_rating" || attr == "ratings_count" %>
+            <input type="number" name="<%= attr %>" id="<%= attr %>"><br>
+        <% else %>
+            <input type="text" name="<%= attr %>" id="<%= attr %>"><br>
+        <% end %>
+    <% end %>
+    <input type="submit" value="Create Book">
+</form>

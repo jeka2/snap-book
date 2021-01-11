@@ -1,6 +1,7 @@
 <% if @displayable_info.empty? %>
     <img id="no-books-img" src="/images/no-books.jpg" alt="no-books-meme">
 <% else %>
+    <a href="/user/<%= User.find(Helpers.current_user(session)).username %>/my_book/create">Create A New Book</a>
     <div id="user-books-container" class="books-wrapper">
         <% @displayable_info.each_with_index do |info, i| %>
             <div class="wrapper-content content-<%= i + 1 %>">

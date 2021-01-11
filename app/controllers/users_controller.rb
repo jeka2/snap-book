@@ -63,6 +63,8 @@ class UsersController < ApplicationController
 
     get '/users/:username' do 
         @user = User.find_by(username: params[:username])
+        @books = @user.books
+        
         if @user
             # Compacts all relevant user info for display
             @user_info = @user.attributes.except('id', 'username', 'password_hash', 'image').compact
@@ -79,7 +81,8 @@ class UsersController < ApplicationController
         
         unless @user.id == Helpers.current_user(session)
             status 403
-            "Permission Denied"
+            session[:flash] << ["You may not edit another person's profile"]
+            redirect to '/'
         else
             @user_info = @user.attributes.except('id', 'username', 'password_hash', 'image')
 
@@ -105,6 +108,10 @@ class UsersController < ApplicationController
 
     get '/users/:username/books' do 
         @user = User.find_by(username: params[:username])
+        unless @user 
+            session[:flash] << ["User doesn't exist"]
+            redirect to '/'
+        end
         books = @user.books
         @displayable_info = []
 

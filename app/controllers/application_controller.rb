@@ -19,9 +19,14 @@ class ApplicationController < Sinatra::Base
     end
   end
 
+  not_found do 
+    status 404
+    erb :'404'
+  end
+
   get "/" do
     # Do a featured book when user arrives
-    if Book.count > 0 # If any books in the database, display those
+    if Book.count > 0 # If any books in the database
       found = false
       while !found
         begin
@@ -52,6 +57,3 @@ class ApplicationController < Sinatra::Base
   end
 
 end
-
-# url random
-# javascript - button and multiple files
