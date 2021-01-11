@@ -7,4 +7,5 @@
     <% else %>
         <img class="book-img" src="/images/default-cover-<%= size %>.jpg">
     <% end %>
+    <%= erb :'partials/favorite_button', :locals => { user: user, book_id: book_id } %>
 </div>

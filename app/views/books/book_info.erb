@@ -1,7 +1,5 @@
 <h2><%= @book.title %></h2>
-<%= erb :'partials/cover_info', :locals=> { isbn: @book.isbn ? @book.isbn : "N/A", size: "L" } %><br>
-
-<%= erb :'partials/favorite_button', :locals => { user: @user, book: @book } %>
+<%= erb :'partials/cover_info', :locals=> { isbn: @book.isbn ? @book.isbn : "N/A", size: "L", user: @user, book_id: @book.id } %><br>
 
 <% @display_info.each do |k,v| %>
     <h3 class="book_<%= k %>"><%= Helpers.displayable_version(k) %>:</h3><br>

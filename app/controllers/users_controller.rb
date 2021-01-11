@@ -113,12 +113,14 @@ class UsersController < ApplicationController
             redirect to '/'
         end
         books = @user.books
-        @displayable_info = []
+        @book_info = []
 
         books.each_with_index do |book, i|
-            @displayable_info << Book.attributes_to_display(book)
-            @displayable_info[i]["id"] = book.google_id
-            @displayable_info[i]["title"] = book.title
+            @book_info << Book.attributes_to_display(book)
+
+            @book_info[i]["google_id"] = book.google_id if book.google_id # If the book was received for the api
+            @book_info[i]["id"] = book.id
+            @book_info[i]["title"] = book.title
         end
 
         erb :'users/books'

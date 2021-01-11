@@ -1,0 +1,9 @@
+<h2 class="title"><a href="/books/<%= info["google_id"] ? "#{info["google_id"]}" : "created/#{info["id"]}" %>"><%= info["title"].truncate(100) %></a></h2>
+<% info.except("id", "title", "type").each do |k, v| %>
+    <% if k == "info_link" %>
+        <small class="google-link"><a href="<%= v %>">Link To Google Page</a></small>
+    <% else %>
+        <h3 class="attribute"><%= Helpers.displayable_version(k) %>:</h3>
+        <p class="value"><%= k == "description" ? v.truncate(100) : v %></p>
+    <% end %>
+<% end %>

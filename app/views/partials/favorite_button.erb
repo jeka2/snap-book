@@ -1,11 +1,14 @@
 <% if user %>
+    <br>
     <div id="favorite-container">
-        <% if user.books.include?(book) %>
+        <% if user.books.include?(Book.find(book_id)) %>
             <small id="user-has-book">Unfavorite</small>
-            <img id="add-remove-button" class="<%= book.id %> favorite check" src="/images/favicon-checkmark.png">
+            <img id="add-remove-button" class="<%= book_id %> favorite check" src="/images/favicon-checkmark.png">
         <% else %>
             <small id="user-has-book">Favorite</small>
-            <img id="add-remove-button" class="<%= book.id %> favorite circle" src="/images/favicon-circle.png">
+            <img id="add-remove-button" class="<%= book_id %> favorite circle" src="/images/favicon-circle.png">
         <% end %>
     </div>
 <% end %>
+
+<link rel="stylesheet" href="/stylesheets/book/favorite-button.css" />

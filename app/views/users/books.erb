@@ -1,23 +1,15 @@
-<% if @displayable_info.empty? %>
+<% if @book_info.empty? %>
     <img id="no-books-img" src="/images/no-books.jpg" alt="no-books-meme">
 <% else %>
     <a href="/user/<%= User.find(Helpers.current_user(session)).username %>/my_book/create">Create A New Book</a>
     <div id="user-books-container" class="books-wrapper">
-        <% @displayable_info.each_with_index do |info, i| %>
+        <% @book_info.each_with_index do |info, i| %>
             <div class="wrapper-content content-<%= i + 1 %>">
                 <div class="content-info">
-                    <h2 class="title"><a href="/books/<%= info["id"] %>"><%= info["title"] %></a></h2>
-                    <% info.except("id", "title").each do |k, v| %>
-                        <% if k == "info_link" %>
-                            <small class="google-link"><a href="<%= v %>">Link To Google Page</a></small>
-                        <% else %>
-                            <h3 class="attribute"><%= Helpers.displayable_version(k) %>:</h3>
-                            <p class="value"><%= k == "description" ? v.truncate(100) : v %></p>
-                        <% end %>
-                    <% end %>
+                    <%= erb :'partials/content_info', :locals=> { info: info }%>
                 </div>
                 <div class="content-image">
-                    <%= erb :'partials/cover_info', :locals=> { isbn: info["isbn"] ? info["isbn"] : "N/A", size: "M" }%>
+                    <%= erb :'partials/cover_info', :locals=> { isbn: info["isbn"] ? info["isbn"] : "N/A", size: "M", user: @user, book_id: info["id"] }%>
                 </div>
             </div>
         <% end %>
