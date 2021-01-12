@@ -58,7 +58,8 @@ function appendNames(bookInfo, ul) {
         const bookName = document.createElement("P");
         bookName.classList.add('book-name');
         bookName.classList.add(`name-${i + 1}`);
-        bookName.innerHTML = bookInfo[i].title;
+        let truncatedTitle = bookInfo[i].title.length > 60 ? bookInfo[i].title.substring(0, 60) + "..." : bookInfo[i].title;
+        bookName.innerHTML = truncatedTitle;
 
         const bookImg = document.createElement("IMG");
         bookImg.classList.add('book-image');
@@ -130,7 +131,9 @@ function flash() {
 
 function imageCheck() {
     let size;
-    if (window.location.href.match(/.*\/users\/.*\/books/)) {
+    let matchesUserBooks = window.location.href.match(/.*\/users\/.*\/books/);
+    let matchesGeneralBooks = window.location.href.match(/.*\/books\/search_results/);
+    if (matchesUserBooks || matchesGeneralBooks) {
         size = 'M';
     }
     else {

@@ -104,16 +104,15 @@
   width:200px;
   height: 50px;
   background-color: #F1EDEC;
+  display: flex;
 }
 
 .book-name {
   float: left;
   width: 66%;
   font-size: 12px;
-}
-
-.list-item {
-  background-color: black;
+  white-space: initial;
+  flex: 4;
 }
 
 .book-image {
@@ -123,4 +122,9 @@
   max-height:80px;
   width: 34%;
   height: auto;
+  flex: 2;
+}
+
+.list-item {
+  background-color: black;
 }
