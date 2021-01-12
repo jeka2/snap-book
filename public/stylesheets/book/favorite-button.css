@@ -1,10 +1,10 @@
-#favorite-container {
+.favorite-container {
     display: inline-flex;
     border: 1px solid black;
     border-radius: 3px;
 }
 
-#user-has-book {
+.user-has-book {
     font-size: 13px;
     margin: 0 2px;
 }

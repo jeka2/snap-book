@@ -74,29 +74,38 @@ function appendNames(bookInfo, ul) {
 }
 ///////////////////////////////////
 function favorite() {
-    let container = document.getElementById('favorite-container');
-    let btn = document.querySelector('.favorite');
-    if (btn) {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            let imgClass = e.target.classList[2];
-            let action = (imgClass == "check") ? "remove" : "add";
-            let type = (imgClass == "check") ? "DELETE" : "POST";
-            $.ajax({
-                url: `/books/self_${action}`,
-                type: type,
-                data: { 'book_id': e.target.classList[0] },
-                success: function (data, status, xhr) {
-                    changeButton(btn, container, imgClass);
-                }
-            });
-        });
+    let containers = document.querySelectorAll('.favorite-container');
+    if (containers) {
+        for (let i = 0; i < containers.length; i++) {
+            addFavoriteEventListenerToButtons(containers[i]);
+        }
     }
 }
 
-function changeButton(btn, container, imgClass) {
+function addFavoriteEventListenerToButtons(container) {
+    console.log(container.childNodes)
+    let text = container.childNodes[1];
+    let btn = container.childNodes[3];
+    btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        let imgClass = e.target.classList[2];
+        let action = (imgClass == "check") ? "remove" : "add";
+        let type = (imgClass == "check") ? "DELETE" : "POST";
+        $.ajax({
+            url: `/books/self_${action}`,
+            type: type,
+            data: { 'book_id': e.target.classList[0] },
+            success: function (data, status, xhr) {
+                changeButton(container);
+            }
+        });
+    });
+}
+
+function changeButton(container) {
     let txtNode = container.childNodes[1];
     let imgNode = container.childNodes[3];
+    let imgClass = imgNode.classList[2];
 
     let replacementClass = (imgClass == "check") ? "circle" : "check";
     let replacementTxt = (imgClass == "check") ? "Favorite" : "Unfavorite";

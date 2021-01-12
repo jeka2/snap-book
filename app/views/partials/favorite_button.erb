@@ -1,6 +1,6 @@
 <% if user %>
     <br>
-    <div id="favorite-container">
+    <div class="favorite-container">
         <% if user.books.include?(Book.find(book_id)) %>
             <small id="user-has-book">Unfavorite</small>
             <img id="add-remove-button" class="<%= book_id %> favorite check" src="/images/favicon-checkmark.png">
