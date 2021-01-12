@@ -9,10 +9,11 @@
     <a href="/login" class="child session-button login-button">Log In</a>
   <% end %>
 <div class="child search-container">
-  <input id="search-bar" type="text" name="books" />
-  <ul id="search-results">
-    
-  </ul>
+  <form action="/books/search_results" method="GET">
+    <input id="search-bar" type="text" name="books" placeholder="Enter a book name.." />
+    <ul id="search-results"></ul>
+    <input id="search-submit" type="submit" value="Search">
+  </form>
 </div>
 </div>
 

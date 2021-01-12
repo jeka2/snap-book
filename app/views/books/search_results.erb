@@ -1,0 +1,20 @@
+<% if @book_info.empty? %>
+    <img id="no-books-img" src="/images/no-search-results.jpg" alt="no-books-meme">
+<% else %>
+    <div id="user-books-container" class="books-wrapper">
+        <% @book_info.each_with_index do |info, i| %>
+            <div class="wrapper-content content-<%= i + 1 %>">
+                <div class="content-info">
+                    <%= erb :'partials/content_info', :locals=> { info: info }%>
+                </div>
+                <div class="content-image">
+                    <%= erb :'partials/cover_info', :locals=> { isbn: info["isbn"] ? info["isbn"] : "N/A", size: "M", user: @user, book_id: info["id"] }%>
+                </div>
+            </div>
+        <% end %>
+    </div>
+<% end %>
+
+
+<link rel="stylesheet" href="/stylesheets/user/books.css" />
+

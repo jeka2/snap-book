@@ -16,15 +16,19 @@ class Book < ActiveRecord::Base
         end
     end
 
-    def self.get_book_sample(size:,title:)
+    def self.get_book_sample(size:,title:,full_info:false)
         # Books in the database will be prioritized for efficiency
-        books_from_database = self.many_from_database(size, title)
+        books_from_database = self.many_from_database(size, title, full_info)
         additional_amount = size - books_from_database.size
-        books_from_api = self.many_from_api(additional_amount, title, false, books_from_database) if additional_amount > 0
+        books_from_api = self.many_from_api(additional_amount, title, full_info, books_from_database) if additional_amount > 0
 
         info_to_send = books_from_api ? books_from_database + books_from_api : books_from_database
 
-        JSON.generate(info_to_send)
+        unless full_info # If not full info, the results are for the search bar
+            JSON.generate(info_to_send)
+        else
+            info_to_send
+        end
     end
 
     def self.random_book

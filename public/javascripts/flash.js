@@ -8,3 +8,6 @@ window.onload = (e) => {
         })
     }
 }
+document.addEventListener('DOMContentLoaded', (e) => {
+
+})

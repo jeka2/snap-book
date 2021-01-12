@@ -1,5 +1,4 @@
 window.onload = (e) => {
-
     favorite();
 
     flash();
@@ -83,8 +82,6 @@ function favorite() {
 }
 
 function addFavoriteEventListenerToButtons(container) {
-    console.log(container.childNodes)
-    let text = container.childNodes[1];
     let btn = container.childNodes[3];
     btn.addEventListener('click', (e) => {
         e.preventDefault();

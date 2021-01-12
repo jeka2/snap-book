@@ -18,6 +18,28 @@ class BooksController < ApplicationController
         UserBook.destroy(relation.id)
     end
 
+    get '/books/search_results' do 
+        title = params[:books]
+        if title.strip != ""
+            books = Book.get_book_sample(size: 20, title: title, full_info: true)
+        else
+            books = []
+        end
+        @user = Helpers.current_user(session) ? User.find(Helpers.current_user(session)) : nil
+
+        @book_info = []
+        
+        books.each_with_index do |book, i|
+            @book_info << Book.attributes_to_display(book)
+
+            @book_info[i]["google_id"] = book.google_id if book.google_id # If the book was received for the api
+            @book_info[i]["id"] = book.id
+            @book_info[i]["title"] = book.title
+        end
+
+        erb :'books/search_results'
+    end
+
     get '/books/:google_id' do 
         @user = User.find(Helpers.current_user(session)) if Helpers.is_logged_in?(session)
         @book = Book.find_by(google_id: params[:google_id])
