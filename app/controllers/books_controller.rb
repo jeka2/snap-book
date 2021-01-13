@@ -1,4 +1,5 @@
 class BooksController < ApplicationController
+
     get '/books/search_bar' do 
         Book.get_book_sample(size: 5, title: params[:title])
     end
@@ -20,7 +21,7 @@ class BooksController < ApplicationController
 
     get '/books/search_results' do 
         title = params[:books]
-        if title.strip != ""
+        if title && title.strip != ""
             books = Book.get_book_sample(size: 20, title: title, full_info: true)
         else
             books = []
@@ -49,9 +50,10 @@ class BooksController < ApplicationController
     end
 
     get "/user/:username/my_book/create" do
-        if User.find_by(username: params[:username]).id != Helpers.current_user(session)
+        @user = User.find_by(username: params[:username])
+        if !@user || (@user.id != Helpers.current_user(session))
             status 403
-            session[:flash] << ["You may not view this resource"]
+            Helpers.set_flash(session, Book.error_list[:unauthorized], true)
             redirect to '/'
         end
         @create_columns = Book.columns_for_creating
@@ -63,12 +65,12 @@ class BooksController < ApplicationController
     post "/user/:username/my_book/create" do
         if User.find_by(username: params[:username]).id != Helpers.current_user(session)
             status 403
-            session[:flash] << ["You may not view this resource"]
+            Helpers.set_flash(session, Book.error_list[:unauthorized])
             redirect to '/'
         end
 
         if Book.find_by(title: params[:title])
-            session[:flash] << ["Title by that name already exists"]
+            Helpers.set_flash(session, Book.error_list[:already_exists])
             redirect to "/user/#{params[:username]}/my_book/create"
         end
         user = User.find_by(username: params[:username])
@@ -85,20 +87,20 @@ class BooksController < ApplicationController
     get '/user/:username/books/:book_id/edit' do
         @user = User.find(Helpers.current_user(session)) if Helpers.current_user(session)
         book_owner = User.find_by(username: params[:username])
-        @book = Book.find(params[:book_id])
+        @book = Book.find_by(id: params[:book_id].to_i)
         @edit_columns = Book.columns_for_creating
 
         if !book_owner 
             status 403
-            session[:flash] << ["No such user"]
+            Helpers.set_flash(session, User.error_list[:no_user], true)
             redirect to '/'
-        elsif @user && (@user.id != book_owner.id)
+        elsif !@user
             status 403
-            session[:flash] << ["You may not edit another person's books"]
+            Helpers.set_flash(session, User.error_list[:not_logged_in], true)
             redirect to '/'
-        elsif !@user.books.include?(@book)
+        elsif (@user && (@user.id != book_owner.id)) || !@user.books.include?(@book)
             status 403
-            session[:flash] << ["This book does not belong to you"]
+            Helpers.set_flash(session, Book.error_list[:unauthorized], true)
             redirect to '/'
         end
         
@@ -112,7 +114,7 @@ class BooksController < ApplicationController
 
         if resource_owner.id != current_user
             status 403
-            flash[:session] << ["You are not allowed to edit this"]
+            Helpers.set_flash(session, Book.error_list[:unauthorized])
             redirect to '/'
         end
 
@@ -144,7 +146,7 @@ class BooksController < ApplicationController
         book = Book.find(params[:book_id])
         
         if !current_user || !resource_owner || !book || (current_user.id != resource_owner.id)
-            session[:flash] << ["You are not allowed to edit this resource"]
+            Helpers.set_flash(session, Book.error_list[:unauthorized])
             redirect to '/'
         end
 

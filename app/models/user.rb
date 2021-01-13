@@ -38,7 +38,10 @@ class User < ActiveRecord::Base
             wrong_number_count: "The password must be between 8 and 30 characters long and contain at least one letter and number.",
             user_exists: "The user by that name already exists. Please choose a different name.",
             wrong_username: "Please make sure the length of your username is between 6 and 30 characters long and it contains no spaces.",
-            bad_credentials: "Username and/or password incorrect"
+            bad_credentials: "Username and/or password incorrect",
+            no_user: "No such user",
+            not_logged_in: "Please log in to continue",
+            unauthorized: "You are not authorized to use this resource"
         }
     end
 end

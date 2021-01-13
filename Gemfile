@@ -16,6 +16,7 @@ gem 'faker'
 gem 'dotenv'
 gem 'googlebooks'
 gem 'random-word'
+gem 'pagy'
 
 group :test do
   gem 'rspec'

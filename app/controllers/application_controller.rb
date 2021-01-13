@@ -11,11 +11,19 @@ class ApplicationController < Sinatra::Base
   use Rack::Session::Cookie, :key => 'rack.session',
                            :path => '/',
                            :secret => 'your_secret'
-
+  
+  before do 
+    if !session[:flash]
+      session[:flash] = []
+    end
+  end
 
   after do 
     if request.request_method == "GET"
-        session[:flash] = []
+        if !session[:from_get] || request.path == "/" 
+          session[:flash] = []
+          session[:from_get] = false
+        end
     end
   end
 

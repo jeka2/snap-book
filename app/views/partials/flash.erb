@@ -1,8 +1,11 @@
 <% if session[:flash] && !session[:flash].empty? %>
     <div id="flash">
-        <% session[:flash].flatten.each_with_index do |mssg, i| %>
-            <div class="flash message-#{i+1}"><%= mssg %><div id="close">X</div></div>
-        <% end %>
+        <div id="flash-messages">
+            <% session[:flash].flatten.each_with_index do |mssg, i| %>
+                <div class="flash message-#{i+1}"><%= mssg %></div>
+            <% end %>
+        </div>
+        <div id="close">&#10004;</div>
     </div>
 <% end %>
 

@@ -1,20 +1,29 @@
 #flash {
-    display: grid;
-    position: relative;
-    width: 70%;
+    position: absolute;
+    right: 0;
+    display: flex;
+    width: 20%;
+    height: 15%;
     margin: auto;
+    z-index: 2;
+    background-color:aquamarine;
 }
 
 .flash {
     float: left;
-    background-color: aquamarine;
     border-radius: 25px;
     padding: 5px 10px;
 }
 
+#flash-messages {
+    flex: 6;
+}
+
 #close {
     top: 0px;
-    float: right;
+    flex: 1;
+    font-size: 50px;
+    margin: auto;
 }
 
 #close:hover {

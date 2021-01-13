@@ -15,14 +15,9 @@ module Helpers
         end
     end
 
-    def self.set_flash(session)
-        session[:flash] = @flash
-    end
-
-    def self.display_flash(session)
-        if session[:flash]
-            add_error(session.delete(:flash))
-        end
+    def self.set_flash(session, message, from_get=false)
+        session[:flash] << message
+        session[:from_get] = true if from_get
     end
 
 end

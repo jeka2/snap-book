@@ -139,4 +139,11 @@ class Book < ActiveRecord::Base
         end
     end
 
+    def self.error_list
+        {
+            unauthorized: "You are not authorized to view this resource",
+            already_exists: "Title by that name already exists",
+        }
+    end
+
 end 

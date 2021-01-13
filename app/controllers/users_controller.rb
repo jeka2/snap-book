@@ -16,7 +16,7 @@ class UsersController < ApplicationController
             give_token
             redirect to '/'
         else
-            session[:flash] << User.error_list[:bad_credentials]
+            Helpers.set_flash(session, User.error_list[:bad_credentials])
             redirect to '/login'
         end
     end
@@ -79,9 +79,13 @@ class UsersController < ApplicationController
     get '/users/:username/edit' do 
         @user = User.find_by(username: params[:username])
         
-        unless @user.id == Helpers.current_user(session)
+        if !@user 
+            status 404
+            Helpers.set_flash(session, User.error_list[:no_user], true)
+            redirect to '/'
+        elsif @user.id == Helpers.current_user(session)
             status 403
-            session[:flash] << ["You may not edit another person's profile"]
+            Helpers.set_flash(session, User.error_list[:unauthorized], true)
             redirect to '/'
         else
             @user_info = @user.attributes.except('id', 'username', 'password_hash', 'image')
@@ -109,7 +113,7 @@ class UsersController < ApplicationController
     get '/users/:username/books' do 
         @user = User.find_by(username: params[:username])
         unless @user 
-            session[:flash] << ["User doesn't exist"]
+            Helpers.set_flash(session, User.error_list[:no_user], true)
             redirect to '/'
         end
         books = @user.books
