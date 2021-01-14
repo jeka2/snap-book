@@ -135,7 +135,7 @@ class Book < ActiveRecord::Base
 
     def self.columns_for_creating
         self.column_names.reject do |col|
-            col == 'id' || col == 'isbn' || col == 'image' || col == 'author_id' || col == 'user_id' || col == 'google_id' || col == 'publisher' || col =='info_link'
+            col == 'id' || col == 'isbn' || col == 'image' || col == 'author_id' || col == 'user_id' || col == 'google_id' || col == 'publisher' || col =='info_link' || col == "ratings_count" || col == "average_rating"
         end
     end
 
@@ -143,6 +143,7 @@ class Book < ActiveRecord::Base
         {
             unauthorized: "You are not authorized to view this resource",
             already_exists: "Title by that name already exists",
+            no_book: "Such book does not exist",
         }
     end
 

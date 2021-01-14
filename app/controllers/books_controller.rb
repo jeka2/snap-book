@@ -81,6 +81,8 @@ class BooksController < ApplicationController
         book.save!
 
         user.books << book
+
+        Helpers.set_flash(session, "Book successfully created!")
         redirect to '/'
     end
 
@@ -93,14 +95,15 @@ class BooksController < ApplicationController
         if !book_owner 
             status 403
             Helpers.set_flash(session, User.error_list[:no_user], true)
-            redirect to '/'
         elsif !@user
             status 403
             Helpers.set_flash(session, User.error_list[:not_logged_in], true)
-            redirect to '/'
         elsif (@user && (@user.id != book_owner.id)) || !@user.books.include?(@book)
             status 403
             Helpers.set_flash(session, Book.error_list[:unauthorized], true)
+        end
+
+        unless session[:flash].empty? 
             redirect to '/'
         end
         
@@ -134,19 +137,28 @@ class BooksController < ApplicationController
 
     get '/books/created/:id' do 
         @user = User.find(Helpers.current_user(session)) if Helpers.is_logged_in?(session)
-        @book = Book.find(params[:id])
+        @book = Book.find_by(id: params[:id])
         @display_info = Book.attributes_to_display(@book)
 
         erb :'books/book_info'
     end
 
     delete '/user/:username/books/:book_id/delete' do 
-        current_user = User.find(Helpers.current_user(session))
+        current_user = User.find_by(id: Helpers.current_user(session))
         resource_owner = User.find_by(username: params[:username])
-        book = Book.find(params[:book_id])
-        
-        if !current_user || !resource_owner || !book || (current_user.id != resource_owner.id)
+        book = Book.find_by(id: params[:book_id].to_i)
+
+        if !current_user
+            Helpers.set_flash(session, User.error_list[:not_logged_in])
+        elsif !resource_owner 
+            Helpers.set_flash(session, User.error_list[:no_user])
+        elsif current_user != resource_owner
             Helpers.set_flash(session, Book.error_list[:unauthorized])
+        elsif !book
+            Helpers.set_flash(session, Book.error_list[:no_book])
+        end
+
+        unless session[:flash].empty? 
             redirect to '/'
         end
 

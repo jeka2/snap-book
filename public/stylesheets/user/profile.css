@@ -19,6 +19,8 @@
 }
 
 .book-info-container {
+    position: relative;
+    overflow: hidden;
     border: 1px solid black;
     margin-right: 10px;
     line-height: 1;
@@ -52,8 +54,8 @@
     color: black;
 }
 
-.page-link:hover {
-    
+.delete-button {
+    display: inline-block;
 }
 
 a.edit-link, a.edit-link:link, a.edit-link:visited {
@@ -69,5 +71,18 @@ a.edit-link, a.edit-link:link, a.edit-link:visited {
 
 .edit-button:hover {
     background-color: #555;
+    cursor: pointer;
+}
+
+.user-options {
+    float: right;
+}
+
+input[type=submit] {
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    color: #0B0080;
+    text-decoration: underline;
     cursor: pointer;
 }

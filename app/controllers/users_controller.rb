@@ -63,7 +63,7 @@ class UsersController < ApplicationController
 
     get '/users/:username' do 
         @user = User.find_by(username: params[:username])
-        @books = @user.books
+        @books = @user.books if @user
         
         if @user
             # Compacts all relevant user info for display
@@ -82,16 +82,18 @@ class UsersController < ApplicationController
         if !@user 
             status 404
             Helpers.set_flash(session, User.error_list[:no_user], true)
-            redirect to '/'
-        elsif @user.id == Helpers.current_user(session)
+        elsif @user.id != Helpers.current_user(session)
             status 403
             Helpers.set_flash(session, User.error_list[:unauthorized], true)
-            redirect to '/'
-        else
-            @user_info = @user.attributes.except('id', 'username', 'password_hash', 'image')
-
-            erb :'users/edit'
         end
+
+        unless session[:flash]
+            redirect to '/'
+        end
+
+        @user_info = @user.attributes.except('id', 'username', 'password_hash', 'image')
+
+        erb :'users/edit'
     end
 
     patch '/users/:username/edit' do 
