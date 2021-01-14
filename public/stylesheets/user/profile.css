@@ -78,7 +78,7 @@ a.edit-link, a.edit-link:link, a.edit-link:visited {
     float: right;
 }
 
-input[type=submit] {
+.button-styling {
     background: none!important;
     border: none;
     padding: 0!important;

@@ -1,11 +1,11 @@
 <div class="user-options">
     <% if book.user_id == page_owner.id %>
         <small><a href="/user/<%= page_owner.username %>/books/<%= book.id %>/edit">Edit This Book</a></small> |
-        <form class = "delete-button" action="/user/<%= page_owner.username %>/books/<%= book.id %>/delete" method="POST">
+        <form class="delete-button" action="/user/<%= page_owner.username %>/books/<%= book.id %>/delete" method="POST">
             <input id="hidden" type="hidden" name="_method" value="delete">
             <input id="hidden" type="hidden" name="username" value="<%= page_owner.username %>">
             <input id="hidden" type="hidden" name="book_id" value="<%= book.id %>">
-            <input type="submit" value="Delete This Book">
+            <input class="button-styling" type="submit" value="Delete This Book">
         </form>
     <% end %>
 </div>
