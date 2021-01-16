@@ -79,15 +79,11 @@ class UsersController < ApplicationController
     get '/users/:username/edit' do 
         @user = User.find_by(username: params[:username])
         
-        if !@user 
-            status 404
-            Helpers.set_flash(session, User.error_list[:no_user], true)
-        elsif @user.id != Helpers.current_user(session)
-            status 403
-            Helpers.set_flash(session, User.error_list[:unauthorized], true)
-        end
+        Helpers.set_flash(session, User.error_list[:no_user], true) unless @user
+        Helpers.set_flash(session, User.error_list[:unauthorized], true) if @user && (@user.id != Helpers.current_user(session))
 
-        unless session[:flash]
+        unless session[:flash].empty?
+            status 403
             redirect to '/'
         end
 

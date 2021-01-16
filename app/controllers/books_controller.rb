@@ -26,7 +26,7 @@ class BooksController < ApplicationController
         else
             books = []
         end
-        @user = Helpers.current_user(session) ? User.find(Helpers.current_user(session)) : nil
+        @user = User.find_by(id: Helpers.current_user(session)) if Helpers.current_user(session)
 
         @book_info = []
         
@@ -92,32 +92,41 @@ class BooksController < ApplicationController
         @book = Book.find_by(id: params[:book_id].to_i)
         @edit_columns = Book.columns_for_creating
 
-        if !book_owner 
-            status 403
-            Helpers.set_flash(session, User.error_list[:no_user], true)
-        elsif !@user
-            status 403
-            Helpers.set_flash(session, User.error_list[:not_logged_in], true)
-        elsif (@user && (@user.id != book_owner.id)) || !@user.books.include?(@book)
-            status 403
-            Helpers.set_flash(session, Book.error_list[:unauthorized], true)
-        end
+        Helpers.set_flash(session, User.error_list[:no_user], true) unless book_owner
+        Helpers.set_flash(session, User.error_list[:not_logged_in], true) unless @user
+        Helpers.set_flash(session, Book.error_list[:unauthorized], true) if (@user && (@user.id != book_owner.id)) || (@user && !@user.books.include?(@book))
 
         unless session[:flash].empty? 
+            status 403
             redirect to '/'
         end
         
         erb :'books/edit'
     end
 
+    get '/books/created/:id' do 
+        @user = User.find(Helpers.current_user(session)) if Helpers.is_logged_in?(session)
+        @book = Book.find_by(id: params[:id])
+        @display_info = Book.attributes_to_display(@book)
+
+        erb :'books/book_info'
+    end
+
     patch '/user/:username/books/:book_id/edit' do
         resource_owner = User.find_by(username: params[:username])
-        current_user = Helpers.current_user(session)
-        book = Book.find(params[:book_id])
+        current_user = User.find_by(id: Helpers.current_user(session))
+        book = Book.find_by(id: params[:book_id].to_i)
 
-        if resource_owner.id != current_user
+        proper_user = current_user && resource_owner && (current_user.id == resource_owner.id) ? true : false 
+        Helpers.set_flash(session, Book.error_list[:unauthorized]) if !proper_user
+        if book && proper_user
+            Helpers.set_flash(session, Book.error_list[:unauthorized]) if book.user_id != current_user.id
+        elsif !book
+            Helpers.set_flash(session, Book.error_list[:no_book])
+        end
+
+        unless session[:flash].empty? 
             status 403
-            Helpers.set_flash(session, Book.error_list[:unauthorized])
             redirect to '/'
         end
 
@@ -135,35 +144,29 @@ class BooksController < ApplicationController
         redirect to '/'
     end 
 
-    get '/books/created/:id' do 
-        @user = User.find(Helpers.current_user(session)) if Helpers.is_logged_in?(session)
-        @book = Book.find_by(id: params[:id])
-        @display_info = Book.attributes_to_display(@book)
-
-        erb :'books/book_info'
-    end
-
     delete '/user/:username/books/:book_id/delete' do 
         current_user = User.find_by(id: Helpers.current_user(session))
         resource_owner = User.find_by(username: params[:username])
         book = Book.find_by(id: params[:book_id].to_i)
 
-        if !current_user
-            Helpers.set_flash(session, User.error_list[:not_logged_in])
-        elsif !resource_owner 
-            Helpers.set_flash(session, User.error_list[:no_user])
-        elsif current_user != resource_owner
-            Helpers.set_flash(session, Book.error_list[:unauthorized])
+        proper_user = current_user && resource_owner && (current_user.id == resource_owner.id) ? true : false 
+        Helpers.set_flash(session, Book.error_list[:unauthorized]) if !proper_user
+        if book && proper_user
+            Helpers.set_flash(session, Book.error_list[:unauthorized]) if book.user_id != current_user.id
         elsif !book
             Helpers.set_flash(session, Book.error_list[:no_book])
         end
 
         unless session[:flash].empty? 
+            status 403
             redirect to '/'
         end
 
         relation = UserBook.where("user_id = ? AND book_id = ?", resource_owner.id, book.id).first
         UserBook.destroy(relation.id)
+        Book.find(book.id).destroy
+
+        Helpers.set_flash(session, "The book was deleted successfully")
 
         redirect to '/'
     end
