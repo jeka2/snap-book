@@ -14,6 +14,7 @@ class UsersController < ApplicationController
 
         if @user && @user.password == params[:password]
             give_token
+            session[:flash] << "Logged in successfully"
             redirect to '/'
         else
             Helpers.set_flash(session, User.error_list[:bad_credentials])
@@ -48,6 +49,7 @@ class UsersController < ApplicationController
             @user.save!
 
             give_token
+            session[:flash] << "Successfully created your account!"
             redirect to '/'
         else
             redirect '/signup'
@@ -78,12 +80,10 @@ class UsersController < ApplicationController
 
     get '/users/:username/edit' do 
         @user = User.find_by(username: params[:username])
-        
-        Helpers.set_flash(session, User.error_list[:no_user], true) unless @user
-        Helpers.set_flash(session, User.error_list[:unauthorized], true) if @user && (@user.id != Helpers.current_user(session))
 
-        unless session[:flash].empty?
+        unless authenticated?(@user)
             status 403
+            session[:from_get] = true
             redirect to '/'
         end
 
@@ -94,6 +94,12 @@ class UsersController < ApplicationController
 
     patch '/users/:username/edit' do 
         @user = User.find_by(username: params[:username])
+
+        unless authenticated?(@user)
+            status 403
+            redirect to '/'
+        end
+
         params.each do |k, v|
             if @user.respond_to?(k)
                 if @user.column_for_attribute(k).type == :integer
@@ -110,10 +116,13 @@ class UsersController < ApplicationController
 
     get '/users/:username/books' do 
         @user = User.find_by(username: params[:username])
-        unless @user 
-            Helpers.set_flash(session, User.error_list[:no_user], true)
+
+        unless authenticated?(@user)
+            status 404
+            session[:from_get] = true
             redirect to '/'
         end
+
         books = @user.books
         @book_info = []
 
@@ -128,6 +137,18 @@ class UsersController < ApplicationController
         erb :'users/books'
     end
 private 
+
+    def authenticated?(user)
+        if user && user.id == Helpers.current_user(session)
+            return true
+        elsif !user 
+            Helpers.set_flash(session, User.error_list[:no_user])
+            return false 
+        else
+            Helpers.set_flash(session, User.error_list[:unauthorized])
+            return false 
+        end
+    end
 
     def give_token
         session[:user_id] = @user.id
